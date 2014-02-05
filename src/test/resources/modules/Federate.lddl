@@ -1,0 +1,13 @@
+/*
+ * Federate with the other nodes in the LAPPS grid.
+ */
+
+include 'Database'
+ 
+federate {
+	source 'picard'
+	target 'anc'
+	username 'suderman'
+	password 'lapplander'
+	url 'http://grid.anc.org:8080/service_manager'
+}
