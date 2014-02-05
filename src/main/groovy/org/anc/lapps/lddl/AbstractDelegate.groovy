@@ -6,6 +6,8 @@ package org.anc.lapps.lddl
  * @author Keith Suderman
  */
 abstract class AbstractDelegate {
+    // These values will be reinitialized with the correct values pulled
+    // from the database.
     static String GRID_ID = 'anc'
     static String NODE_ID = 'picard'
     static String GRID_USER_ID = 'operator1'
@@ -16,6 +18,7 @@ abstract class AbstractDelegate {
     Set fieldNames() {
         return [] as HashSet
     }
+
     abstract String[] asSql()
 
     void methodMissing(String name, args) {

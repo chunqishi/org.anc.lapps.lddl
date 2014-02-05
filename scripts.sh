@@ -1,19 +1,17 @@
 #!/bin/bash
 
 # Zips the example script files in the modules directory.
-# TODO Remove dead code related to the scripts directory.
+
 set -eu
 
-RES=src/test/resources
-#SCRIPTS=$RES/scripts
-MODULES=$RES/modules
-#ZIPFILE=lddl-scripts.zip
-MODZIP=lddl-modules.zip
+if [ ! -e VERSION ] ; then
+    mvn anc:version
+fi
 
-#if [ ! -e $SCRIPTS ] ; then
-#	echo "Scripts directory not found: $SCRIPTS"
-#	exit
-#fi
+VERSION=`cat VERSION`
+RES=src/test/resources
+MODULES=$RES/modules
+ZIPFILE=lddl-$VERSION-scripts.zip
 
 if [ ! -e $MODULES ] ; then
 	echo "Modules directory not found: $MODULES"
@@ -21,24 +19,22 @@ if [ ! -e $MODULES ] ; then
 fi
 
 cd $RES
-#if [ -e $ZIPFILE ] ; then
-#	echo "Removing existing file: $ZIPFILE"
-#	rm $ZIPFILE
-#fi
 
-if [ -e $MODZIP ] ; then
-	echo "Removing existing file: $MODZIP"
-	rm $MODZIP
+if [ -e $ZIPFILE ] ; then
+	echo "Removing existing file: $ZIPFILE"
+	rm $ZIPFILE
 fi
-
-#echo "Packaging scripts."
-#zip $ZIPFILE scripts/*.*
 
 echo "Packaging modules."
-zip $MODZIP modules/*.*
+zip -r $ZIPFILE modules/
 
 if [ -e /Volumes/share ] ; then
-#	cp $ZIPFILE /Volumes/share
-	cp $MODZIP /Volumes/share
+	cp $ZIPFILE /Volumes/share
 	echo "Copied zip file to share"
 fi
+
+set +u
+if  [ "$1" = "-upload" ] ; then
+    anc-put $ZIPFILE /home/www/anc/downloads
+fi
+

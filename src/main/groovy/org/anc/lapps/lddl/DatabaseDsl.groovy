@@ -188,6 +188,13 @@ class DatabaseDsl {
             statements << cl.delegate
         }
 
+        meta.federate = { Closure cl ->
+            cl.delegate = new FederationDelegate()
+            cl.resolveStrategy = Closure.DELEGATE_FIRST
+            cl()
+            statements << cl.delegate
+        }
+
         meta.sql = { String statement ->
             statements << new SqlDelegate(statement)
         }
