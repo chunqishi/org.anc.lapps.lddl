@@ -10,4 +10,7 @@ federate {
 	username 'suderman'
 	password 'lapplander'
 	url 'http://grid.anc.org:8080/service_manager'
+	commercial true
+	homepage "http://www.anc.org"
 }
+

@@ -3,11 +3,11 @@ package org.anc.lapps.lddl
 /**
  * @author Keith Suderman
  */
-class FederationDelegate extends AbstractTableDelegate {
+class FederateDelegate extends AbstractTableDelegate {
 
     @Override
     Set fieldNames() {
-        return [ 'source', 'target', 'username', 'password', 'url' ]
+        return [ 'source', 'target', 'username', 'password', 'url', 'commercial','homepage' ]
     }
 
     @Override
@@ -17,7 +17,7 @@ class FederationDelegate extends AbstractTableDelegate {
 
     @Override
     String columns() {
-        return 'sourcegridid,targetgridid,sourcegridname,createddatetime,updateddatetime,targetgriduserid,targetgridaccesstoken'
+        return 'sourcegridid,targetgridid,sourcegridname,tagetgridname,createddatetime,updateddatetime,targetgriduserid,targetgridaccesstoken,connected,requesting,targetgridhomepageurlclazz,targetgridhomepageurlstringvalue'
     }
 
     @Override
@@ -26,7 +26,7 @@ class FederationDelegate extends AbstractTableDelegate {
         StringBuilder buffer = new StringBuilder()
         String password = encodePassword(fields.password)
         buffer << "'${fields.source}'"
-        [fields.target, fields.source, now, now, fields.username, password].each {
+        [fields.target, fields.source,fields.target, now, now, fields.username, password,true,false,'java.net.URL',fields.homepage].each {
             buffer << ",'${it}'"
         }
 
@@ -37,10 +37,11 @@ class FederationDelegate extends AbstractTableDelegate {
     String[] asSql() {
         def result = []
         String now = timestamp()
-        String columns = 'gridid,createddatetime,updateddatetime,gridname,hosted,operatoruserid,url'
+        String columns = 'gridid,createddatetime,updateddatetime,gridname,hosted,operatoruserid,url,autoapproveenabled,commercialuseallowed'
         StringBuilder buffer = new StringBuilder()
         buffer << "'${fields.target}'"
-        [now,now,fields.target,false,fields.username,fields.url].each {
+        def commercialUse = fields.commercial ?: false
+        [now,now,fields.target,false,fields.username,fields.url,true,commercialUse].each {
             buffer << ", '${it}'"
         }
         result << "insert into grid (${columns}) values (${buffer.toString()})"

@@ -1,7 +1,6 @@
 package org.anc.lapps.lddl
 
 import groovy.sql.Sql
-import java.security.MessageDigest
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
 
@@ -189,7 +188,7 @@ class DatabaseDsl {
         }
 
         meta.federate = { Closure cl ->
-            cl.delegate = new FederationDelegate()
+            cl.delegate = new FederateDelegate()
             cl.resolveStrategy = Closure.DELEGATE_FIRST
             cl()
             statements << cl.delegate
